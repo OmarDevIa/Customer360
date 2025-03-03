@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p
 # AVERTISSEMENT DE SÉCURITÉ : ne pas exécuter avec le débogage activé en production !
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['customer360.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.cognitiveclass.ai']
 
