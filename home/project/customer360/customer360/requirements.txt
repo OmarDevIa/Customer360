@@ -1,6 +1,0 @@
-django
-gunicorn
-whitenoise
-psycopg2-binary  # Si tu utilises PostgreSQL
-dj-database-url
-

@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+from environ import Env
+
+env = Env()
+Env.read_env()
 
 # Construire des chemins à l'intérieur du projet comme ceci : BASE_DIR / 'sous-dossier'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +31,7 @@ SECRET_KEY = 'django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p
 # AVERTISSEMENT DE SÉCURITÉ : ne pas exécuter avec le débogage activé en production !
 DEBUG = True
 
-ALLOWED_HOSTS = ['customer360.onrender.com']
+ALLOWED_HOSTS = ["*"]
 
 CSRF_TRUSTED_ORIGINS = ['https://*.cognitiveclass.ai']
 
@@ -76,13 +81,17 @@ WSGI_APPLICATION = 'customer360.wsgi.application'
 # Base de données
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(env('DATABASE_URL'))
+        
+    
 }
-
 
 # Validation des mots de passe
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
