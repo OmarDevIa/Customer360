@@ -6,9 +6,9 @@ gunicorn==20.1.0
 psycopg2-binary==2.9.1
 
 # Gestion des fichiers statiques
-whitenoise[brotli]
+whitenoise[brotli]==6.2.0
 
 # Gestion des variables d’environnement
-dj-database-url
-django-environ
-python-dotenv
+dj-database-url==0.5.0
+django-environ==0.8.1
+python-dotenv==0.21.0
