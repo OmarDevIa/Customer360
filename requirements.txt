@@ -10,6 +10,5 @@ whitenoise[brotli]
 
 # Gestion des variables d’environnement
 dj-database-url
-
-# Sécurité et configuration environnementale
+django-environ
 python-dotenv
