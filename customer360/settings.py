@@ -1,42 +1,26 @@
-"""
-Paramètres Django pour le projet customer360.
-
-Généré par 'django-admin startproject' utilisant Django 4.2.4.
-
-Pour plus d'informations sur ce fichier, voir
-https://docs.djangoproject.com/en/4.2/topics/settings/
-
-Pour la liste complète des paramètres et de leurs valeurs, voir
-https://docs.djangoproject.com/en/4.2/ref/settings/
-"""
-
 from pathlib import Path
 import os
 import dj_database_url
-from environ import Env
+import environ
 
-env = Env()
-Env.read_env()
+# Initialisation de django-environ
+env = environ.Env()
+environ.Env.read_env()  # Charge les variables d’environnement depuis un fichier .env s'il existe
 
-# Construire des chemins à l'intérieur du projet comme ceci : BASE_DIR / 'sous-dossier'.
+# Base directory du projet
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Sécurité
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p')
+DEBUG = env.bool('DEBUG', default=False)
 
-# Paramètres de développement rapide - inadaptés pour la production
-# Voir https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# AVERTISSEMENT DE SÉCURITÉ : gardez la clé secrète utilisée en production secrète !
-SECRET_KEY = 'django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p'
-
-# AVERTISSEMENT DE SÉCURITÉ : ne pas exécuter avec le débogage activé en production !
-DEBUG = True
-
+# Autoriser les hôtes pour Render
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ['https://*.cognitiveclass.ai']
+# Origines de confiance pour CSRF
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
-# Définition de l'application
-
+# Applications installées
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,11 +28,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'customer360'
+    'whitenoise.runserver_nostatic',  # Pour servir les fichiers statiques
+    'customer360',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Ajout pour WhiteNoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,7 +49,7 @@ ROOT_URLCONF = 'customer360.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],  # Assure-toi d’avoir un dossier "templates"
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,18 +62,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'customer360.wsgi.application'
+# ASGI ou WSGI selon l'utilisation
+ASGI_APPLICATION = 'customer360.asgi.application'  # Pour Uvicorn
+WSGI_APPLICATION = 'customer360.wsgi.application'  # Pour Gunicorn
 
-
-# Base de données
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': dj_database_url.parse(env('DATABASE_URL'))
         
@@ -95,46 +73,25 @@ DATABASES = {
 }
 
 # Validation des mots de passe
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # Internationalisation
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
 LANGUAGE_CODE = 'fr-fr'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Gestion des fichiers statiques avec WhiteNoise
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-# Fichiers statiques (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR,"static/"),
-)
-
-# Type de champ clé primaire par défaut
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
+# Type de clé primaire par défaut
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
