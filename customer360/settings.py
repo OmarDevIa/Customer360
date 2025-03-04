@@ -65,9 +65,10 @@ TEMPLATES = [
 ASGI_APPLICATION = 'customer360.asgi.application'  # Pour Uvicorn
 WSGI_APPLICATION = 'customer360.wsgi.application'  # Pour Gunicorn
 
-# Base de données (utilisation de dj_database_url)
 DATABASES = {
-    'default': dj_database_url.config(default=env("DATABASE_URL", default="sqlite:///db.sqlite3"))
+    'default': dj_database_url.parse(env('DATABASE_URL'))
+        
+    
 }
 
 # Validation des mots de passe
