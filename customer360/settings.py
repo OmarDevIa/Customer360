@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'customer360.wsgi.application'
 #     }
 # }
 DATABASES = {
-    'default': dj_database_url.parse(env('DATABASE_URL'))
+    'default': dj_database_url.parse(env('postgresql://basebd_4ga1_user:nD8eWsgXxrLXPAynwt3SCv5Rwp01SAOB@dpg-cv2fntt6l47c73fnhgdg-a.oregon-postgres.render.com/basebd_4ga1'))
         
     
 }
