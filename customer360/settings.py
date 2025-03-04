@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 import dj_database_url
-import environ  # Correction ici
+import environ
 
 # Initialisation de django-environ
 env = environ.Env()
@@ -11,12 +11,14 @@ environ.Env.read_env()  # Charge les variables d’environnement depuis un fichi
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Sécurité
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p')
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p')
+DEBUG = env.bool('DEBUG', default=False)
+
+# Autoriser les hôtes pour Render
 ALLOWED_HOSTS = ["*"]
 
 # Origines de confiance pour CSRF
-CSRF_TRUSTED_ORIGINS = ['https://*.cognitiveclass.ai']
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
 # Applications installées
 INSTALLED_APPS = [
@@ -26,11 +28,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',  # Pour servir les fichiers statiques
     'customer360',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Ajout pour WhiteNoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -44,7 +48,7 @@ ROOT_URLCONF = 'customer360.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],  # Assure-toi d’avoir un dossier "templates"
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,11 +61,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'customer360.wsgi.application'
+# ASGI ou WSGI selon l'utilisation
+ASGI_APPLICATION = 'customer360.asgi.application'  # Pour Uvicorn
+WSGI_APPLICATION = 'customer360.wsgi.application'  # Pour Gunicorn
 
 # Base de données (utilisation de dj_database_url)
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
+    'default': dj_database_url.config(default=env("DATABASE_URL", default="sqlite:///db.sqlite3"))
 }
 
 # Validation des mots de passe
@@ -78,10 +84,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Gestion des fichiers statiques
-STATIC_URL = 'static/'
+# Gestion des fichiers statiques avec WhiteNoise
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Type de clé primaire par défaut
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
