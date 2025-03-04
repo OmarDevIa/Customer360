@@ -1,4 +1,3 @@
-cgi
 
 Django==3.2.9
 gunicorn==20.1.0
