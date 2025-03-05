@@ -1,7 +1,6 @@
 services:
   - type: web
-<<<<<<< HEAD
-    name: my-django-app
+    name: my-django-app  # Ou "mon-projet-django", choisis un seul nom
     env: python
     pythonVersion: 3.12.2
     buildCommand: |
@@ -9,12 +8,6 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
     startCommand: "gunicorn customer360.wsgi:application"
-=======
-    name: mon-projet-django
-    runtime: python
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn customer360.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.2"
->>>>>>> 41ed61e067f579cb891e14aaed63a9555d6a6d35
