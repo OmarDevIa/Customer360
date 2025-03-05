@@ -13,9 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Sécurité
 SECRET_KEY = env('SECRET_KEY', default='django-insecure-mxj20imb1j!8hz2!kqt*qh5^=y3q3^hyknmj**bpi9v2vuhr!p')
 DEBUG = env.bool('DEBUG', default=False)
-
+PORT = os.environ.get("PORT", "10000") 
 # Autoriser les hôtes pour Render
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*', 'customer360-1.onrender.com']
 
 # Origines de confiance pour CSRF
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
