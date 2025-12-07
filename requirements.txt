@@ -1,20 +1,9 @@
-# Django et serveur WSGI
-Django==4.2.11        # LTS, compatible Python 3.13
-gunicorn==21.2.0      # Version récente, évite le warning pkg_resources
-
-# PostgreSQL (driver)
-psycopg[binary]==3.2.1
-
-
-# Gestion des fichiers statiques
+Django==4.2.11
+gunicorn==21.2.0
 whitenoise[brotli]==6.6.0
-
-# Gestion des variables d’environnement
 dj-database-url==2.1.0
 django-environ==0.11.2
 python-dotenv==1.0.1
-
-# Outils complémentaires (optionnel mais recommandé)
-setuptools==75.1.0    # Version stable, évite les conflits
-sqlparse==0.5.4       # Déjà installé, compatible Django 4.2
-asgiref==3.8.1        # Nécessaire pour Django 4.2
+setuptools==75.1.0
+sqlparse==0.5.4
+asgiref==3.8.1
